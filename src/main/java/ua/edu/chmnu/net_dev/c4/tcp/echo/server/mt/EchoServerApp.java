@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 
 public class EchoServerApp extends TcpServerApp {
 
-    private final static int DEFAULT_PORT = 7771;
+    private final static int DEFAULT_PORT = 6710;
 
     private final static int DEFAULT_BACK_LOG = 20;
 
@@ -36,7 +36,7 @@ public class EchoServerApp extends TcpServerApp {
 
     private static ExecutorService createExecutor(CmdLineOptions options) {
         var poolSize = options
-                .getLongOption("pool-size", Integer::valueOf)
+                .getLongOption("pool-size", Integer::valueOf, DEFAULT_POOL_SIZE)
                 .orElse(DEFAULT_POOL_SIZE);
 
         return Executors.newFixedThreadPool(poolSize);
@@ -44,16 +44,16 @@ public class EchoServerApp extends TcpServerApp {
 
     private static TcpServer createTcpServer(CmdLineOptions options, ExecutorService executorService) throws IOException {
         var port = options
-                .getLongOption("port", Integer::valueOf)
+                .getLongOption("port", Integer::valueOf, DEFAULT_PORT)
                 .orElse(DEFAULT_PORT);
 
         var backlog = options
-                .getLongOption("backlog", Integer::valueOf)
+                .getLongOption("backlog", Integer::valueOf, DEFAULT_BACK_LOG)
                 .orElse(DEFAULT_BACK_LOG);
 
         return new TcpServer(port, backlog)
-                .withClientSessionProvider(new EchoClientSessionProvider())
-                .withClientSessionSubmitter(new DefaultClientSessionSubmitter(executorService));
+                .with(new EchoClientSessionProvider())
+                .with(new DefaultClientSessionSubmitter(executorService));
 
     }
 
@@ -69,9 +69,16 @@ public class EchoServerApp extends TcpServerApp {
                 }
             }
 
+            executorService.shutdownNow();
+
+            System.out.println("Waiting for server to shutdown");
+
+            while (!executorService.isShutdown()) {
+                System.out.print(".");
+            }
+
             tcpServer.setActive(false);
 
-            executorService.shutdown();
         }
     }
 }

@@ -10,10 +10,17 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Echo {
+    private final static int DEFAULT_PORT = 6710;
 
     public static void main(String[] args) throws IOException {
 
-        EndPoint endPoint = new EndPoint(args[0]);
+        EndPoint endPoint;
+
+        if (args.length > 0) {
+            endPoint = new EndPoint(args[0]);
+        } else {
+            endPoint = new EndPoint("localhost", DEFAULT_PORT);
+        }
 
         try(Socket clientSocket = new Socket(endPoint.getHost(), endPoint.getPort())) {
 
@@ -46,7 +53,6 @@ public class Echo {
 
                     writer.println(line);
 
-                    System.out.println("Send line to server");
                     System.out.println("Waiting for response...");
 
                     line = reader.readLine();

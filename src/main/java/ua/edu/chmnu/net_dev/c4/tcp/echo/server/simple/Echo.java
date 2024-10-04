@@ -9,6 +9,8 @@ import java.net.Socket;
 
 public class Echo {
 
+   private final static int DEFAULT_PORT = 6710;
+
     private static String inverse(String source) {
         return new StringBuilder(source).reverse().toString();
     }
@@ -30,11 +32,11 @@ public class Echo {
 
             String promptNick = "Enter your nick:";
 
-            String promptData = "Enter message (Q to quit):";
-
             writer.println(promptNick);
 
             String nick = ir.readLine();
+
+            String promptData = "Enter message (Q to quit):";
 
             System.out.println("Client nick: " + nick);
 
@@ -50,7 +52,7 @@ public class Echo {
 
                     String inLine = ir.readLine();
 
-                    if (inLine == null || inLine.isBlank()) {
+                    if (inLine == null || inLine.isBlank() || inLine.equalsIgnoreCase("Q")) {
                         break;
                     }
 
@@ -75,7 +77,11 @@ public class Echo {
 
     public static void main(String[] args) {
 
-        Integer port = resolvePort(args[0], 6710);
+        Integer port = DEFAULT_PORT;
+
+        if (args.length > 0 ) {
+            port = resolvePort(args[0], DEFAULT_PORT);
+        }
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
 

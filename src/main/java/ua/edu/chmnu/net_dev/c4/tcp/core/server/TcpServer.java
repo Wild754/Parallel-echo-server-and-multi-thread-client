@@ -41,12 +41,12 @@ public class TcpServer implements Runnable {
         }
     }
 
-    public TcpServer withClientSessionProvider(ClientSessionProvider clientSessionProvider) {
+    public TcpServer with(ClientSessionProvider clientSessionProvider) {
         this.clientSessionProvider = clientSessionProvider;
         return this;
     }
 
-    public TcpServer withClientSessionSubmitter(ClientSessionSubmitter clientSessionSubmitter) {
+    public TcpServer with(ClientSessionSubmitter clientSessionSubmitter) {
         this.clientSessionSubmitter = clientSessionSubmitter;
         return this;
     }
@@ -59,7 +59,7 @@ public class TcpServer implements Runnable {
         }
 
         try (var serverSocket = this.serverSocket) {
-            System.out.println("Listening on port " + this.serverSocket.getLocalPort());
+            System.out.println("Listening on port " + serverSocket.getLocalPort());
 
             while (active) {
                 System.out.println("Waiting for connection...");

@@ -12,15 +12,19 @@ public class CmdLineOptions {
         this.args = args;
     }
 
-    public <T> Optional<T> getShortOption(char option, Function<String, T> converter) {
-        return getOption("-" + option + ":", converter);
+    public <T> Optional<T> getShortOption(char option, Function<String, T> converter, T defaultValue) {
+        return getOption("-" + option + ":", converter, defaultValue);
     }
 
-    public <T> Optional<T> getLongOption(String option, Function<String, T> converter) {
-        return getOption("--" + option + ":", converter);
+    public <T> Optional<T> getLongOption(String option, Function<String, T> converter, T defaultValue) {
+        return getOption("--" + option + ":", converter, defaultValue);
     }
 
-    private <T> Optional<T> getOption(String prefix, Function<String, T> converter) {
+    private <T> Optional<T> getOption(String prefix, Function<String, T> converter, T defaultValue) {
+        if (args == null || args.length == 0) {
+            return Optional.of(defaultValue);
+        }
+
         return Arrays.stream(args)
                 .filter(a -> a.startsWith(prefix))
                 .findFirst()
