@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
-import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 @UtilityClass
 public class ObjectDatagram {
 
-    public static <T extends java.io.Serializable> DatagramPacket to(T source, InetSocketAddress target) throws IOException {
+    public static <T extends java.io.Serializable> DatagramPacket to(T source, SocketAddress target) throws IOException {
         try (var bos = new ByteArrayOutputStream();
              var oos = new ObjectOutputStream(bos)) {
             oos.writeObject(source);

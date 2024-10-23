@@ -1,6 +1,7 @@
 package ua.edu.chmnu.net_dev.c4.udp.receiver;
 
 import lombok.SneakyThrows;
+import ua.edu.chmnu.net_dev.c4.udp.shared.FileFragment;
 import ua.edu.chmnu.net_dev.c4.udp.shared.FileMeta;
 import ua.edu.chmnu.net_dev.c4.udp.utils.ObjectDatagram;
 
@@ -42,8 +43,11 @@ public class FileReceiver {
 
     @SneakyThrows
     private void sendResponse(SocketAddress to, String response) {
-        byte[] buffer = response.getBytes();
-        socket.send(new DatagramPacket(buffer, buffer.length, to));
+        var fragment = new FileFragment(response);
+
+        var datagram = ObjectDatagram.to(fragment, to);
+
+        socket.send(datagram);
     }
 
     public static void main(String[] args) {
