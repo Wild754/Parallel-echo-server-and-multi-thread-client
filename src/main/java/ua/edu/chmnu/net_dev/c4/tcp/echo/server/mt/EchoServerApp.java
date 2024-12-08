@@ -14,9 +14,9 @@ public class EchoServerApp extends TcpServerApp {
 
     private final static int DEFAULT_PORT = 6710;
 
-    private final static int DEFAULT_BACK_LOG = 20;
+    private final static int DEFAULT_BACK_LOG = 100;
 
-    private final static int DEFAULT_POOL_SIZE = 20;
+    private final static int DEFAULT_POOL_SIZE = 100;
 
     public EchoServerApp(TcpServer server, ExecutorService executor) {
         super(server, executor);

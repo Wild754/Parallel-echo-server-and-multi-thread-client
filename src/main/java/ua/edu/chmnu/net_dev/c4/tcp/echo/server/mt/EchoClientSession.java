@@ -53,14 +53,27 @@ public class EchoClientSession implements ClientSession {
 
                         System.out.println(inPrefix + inLine);
 
+                        // Вимірюємо час обробки
+                        long startTime = System.nanoTime();
+
                         String outLine = inverse(inLine);
 
-                        writer.println(outLine);
+                        long endTime = System.nanoTime();
+                        long durationMs = (endTime - startTime) / 1_000_000; // в мілісекундах
 
-                        System.out.println(outPrefix + outLine);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        break;
+                        // Відправляємо клієнту результат та тривалість обробки
+                        writer.println(outLine + " | Processing Time: " + durationMs + " ms");
+
+                        System.out.println(outPrefix + outLine + " | Processing Time: " + durationMs + " ms");
+
+                        // Затримка перед обробкою наступного повідомлення
+                        Thread.sleep(1000); // 1 секунда затримки
+                    } finally {
+                        try {
+                            socket.close();  // Закриваємо з'єднання
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
